@@ -178,6 +178,32 @@ If the file does not exist, the script will automatically generate a default tem
 | `builder_passphrase` | string | Builder API passphrase |
 | `enabled` | bool | Enable or disable the account |
 
+
+### Account Type / Signature Type Guide
+
+`funder_address` must match your actual account type. If this is wrong, the bot may find positions but fail to redeem.
+
+| signature_type | Account Type | How You Signed Up |
+|---:|---|---|
+| `1` | Poly Proxy | Email or social login (Google, etc.) |
+| `2` | Gnosis Safe | Browser wallet (MetaMask, Rainbow, Coinbase Wallet, etc.) |
+| `0` | EOA | Direct on-chain interaction (no proxy) |
+
+How to map it in this project:
+
+- `private_key`: signer private key used by the relayer client.
+- `funder_address`: the address that actually owns the redeemable position (Proxy/Safe/EOA).
+- `global.relayer_tx_type`:
+  - use `SAFE` for Safe-based flow (signature_type `2`)
+  - use `PROXY` for proxy-based flow when your relayer SDK supports it (signature_type `1`)
+  - for EOA-like direct ownership (signature_type `0`), verify your relayer/sdk route before production.
+
+Quick checks before running:
+
+1. The `funder_address` in config is exactly the same address shown by Polymarket for your positions.
+2. The private key controls the signer expected by your account type.
+3. `relayer_tx_type` is aligned with your account type (Safe vs Proxy).
+
 ---
 
 ## Usage

@@ -172,6 +172,32 @@ config_redeem.json
 | `builder_passphrase` | string | Builder API Passphrase |
 | `enabled` | bool | 是否启用该账户 |
 
+
+### 账户类型 / Signature Type 对照
+
+`funder_address` 必须和你的真实账户类型一致，否则会出现“能扫到仓位但无法领取”的问题。
+
+| signature_type | Account Type | How You Signed Up |
+|---:|---|---|
+| `1` | Poly Proxy | Email or social login (Google, etc.) |
+| `2` | Gnosis Safe | Browser wallet (MetaMask, Rainbow, Coinbase Wallet, etc.) |
+| `0` | EOA | Direct on-chain interaction (no proxy) |
+
+在本项目中的映射建议：
+
+- `private_key`：用于签名的私钥。
+- `funder_address`：真正持有可领取仓位的地址（Proxy / Safe / EOA 地址）。
+- `global.relayer_tx_type`：
+  - Safe 路径通常用 `SAFE`（对应 signature_type `2`）
+  - Proxy 路径可用 `PROXY`（需 SDK/Relayer 支持，对应 signature_type `1`）
+  - EOA（signature_type `0`）请先确认你的 relayer/sdk 是否支持再上生产。
+
+启动前快速检查：
+
+1. 配置里的 `funder_address` 与 Polymarket 页面展示地址完全一致。
+2. `private_key` 与该账户类型实际签名人一致。
+3. `relayer_tx_type` 与账户类型一致（Safe / Proxy）。
+
 ---
 
 ## 使用方式
