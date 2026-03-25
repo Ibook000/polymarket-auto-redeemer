@@ -82,6 +82,9 @@ bash scripts/quickstart.sh
 
 ## 一键启动 / 一键停止（小白友好）
 
+完整图文教程：[`ONE_CLICK_GUIDE.zh-CN.md`](./ONE_CLICK_GUIDE.zh-CN.md)
+
+
 给 0 基础用户，克隆仓库后直接执行：
 
 ```bash

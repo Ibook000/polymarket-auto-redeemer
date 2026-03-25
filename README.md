@@ -89,6 +89,9 @@ bash scripts/quickstart.sh
 
 ## One-Click Start / Stop (Beginner Friendly)
 
+Detailed Chinese guide: [`ONE_CLICK_GUIDE.zh-CN.md`](./ONE_CLICK_GUIDE.zh-CN.md)
+
+
 For users with zero Linux background, use these two commands after cloning the repo:
 
 ```bash
