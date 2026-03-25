@@ -86,6 +86,11 @@ pip install web3 requests py-builder-relayer-client py-builder-signing-sdk
 ```text
 polymarket-auto-redeemer/
 ├── auto_redeem.py
+├── main.py
+├── redeemer.py
+├── relayer_adapter.py
+├── polymarket_client.py
+├── config.py
 ├── config_redeem.example.json
 ├── requirements.txt
 ├── .gitignore
