@@ -65,6 +65,60 @@ The bot runs in a loop and performs the following steps:
 
 ---
 
+## One-Line Linux Setup (Download + Configure + Run)
+
+Use this command on Linux to clone/update the repo, create a virtual environment, install dependencies, create `config_redeem.json`, open it in your editor, and then start the bot:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto-redeemer/main/scripts/quickstart.sh)"
+```
+
+Optional environment overrides:
+
+```bash
+INSTALL_DIR=$HOME/my-redeemer PYTHON_BIN=python3.11 EDITOR=vim bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto-redeemer/main/scripts/quickstart.sh)"
+```
+
+For audited/local usage, you can also run:
+
+```bash
+bash scripts/quickstart.sh
+```
+
+---
+
+## One-Click Start / Stop (Beginner Friendly)
+
+Detailed Chinese guide: [`ONE_CLICK_GUIDE.zh-CN.md`](./ONE_CLICK_GUIDE.zh-CN.md)
+
+
+For users with zero Linux background, use these two commands after cloning the repo:
+
+```bash
+bash scripts/edit_config.sh
+bash scripts/one_click_start.sh
+bash scripts/one_click_stop.sh
+```
+
+Edit config first (important):
+- run `bash scripts/edit_config.sh`
+
+What start does automatically:
+- creates `.venv` if missing
+- installs dependencies
+- auto-creates `config_redeem.json` from template if missing
+- runs the bot in background and writes PID to `.redeemer.pid`
+- writes runtime logs to `redeemer.runtime.log`
+
+Useful checks:
+
+```bash
+tail -f redeemer.runtime.log
+cat .redeemer.pid
+```
+
+---
+
 ## Installation
 
 Clone the repository:

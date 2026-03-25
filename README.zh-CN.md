@@ -58,6 +58,60 @@
 
 ---
 
+## Linux 一行命令（下载 + 配置 + 运行）
+
+Linux 用户可直接执行下面一行命令：自动完成仓库拉取/更新、虚拟环境创建、依赖安装、`config_redeem.json` 生成、打开编辑器配置并启动程序。
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto-redeemer/main/scripts/quickstart.sh)"
+```
+
+可选环境变量（覆盖默认值）：
+
+```bash
+INSTALL_DIR=$HOME/my-redeemer PYTHON_BIN=python3.11 EDITOR=vim bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto-redeemer/main/scripts/quickstart.sh)"
+```
+
+如果你希望先本地审阅脚本再执行：
+
+```bash
+bash scripts/quickstart.sh
+```
+
+---
+
+## 一键启动 / 一键停止（小白友好）
+
+完整图文教程：[`ONE_CLICK_GUIDE.zh-CN.md`](./ONE_CLICK_GUIDE.zh-CN.md)
+
+
+给 0 基础用户，克隆仓库后直接执行：
+
+```bash
+bash scripts/edit_config.sh
+bash scripts/one_click_start.sh
+bash scripts/one_click_stop.sh
+```
+
+建议先编辑配置（非常重要）：
+- 先执行 `bash scripts/edit_config.sh`
+
+一键启动会自动完成：
+- 不存在则创建 `.venv`
+- 安装依赖
+- 不存在则从模板生成 `config_redeem.json`
+- 后台启动程序并将 PID 写入 `.redeemer.pid`
+- 运行日志写入 `redeemer.runtime.log`
+
+常用查看命令：
+
+```bash
+tail -f redeemer.runtime.log
+cat .redeemer.pid
+```
+
+---
+
 ## 安装
 
 克隆仓库：
