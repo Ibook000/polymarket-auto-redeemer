@@ -1,0 +1,24 @@
+{
+  "global": {
+    "enabled": true,
+    "scan_interval": 15,
+    "retry_interval": 120,
+    "max_per_scan": 10,
+    "pending_log_interval": 10,
+    "relayer_url": "https://relayer-v2.polymarket.com",
+    "relayer_tx_type": "SAFE",
+    "http_proxy": "",
+    "https_proxy": ""
+  },
+  "accounts": [
+    {
+      "name": "account-1",
+      "private_key": "0xYOUR_PRIVATE_KEY",
+      "funder_address": "0xYOUR_FUNDER_ADDRESS",
+      "builder_api_key": "YOUR_API_KEY",
+      "builder_secret": "YOUR_API_SECRET",
+      "builder_passphrase": "YOUR_API_PASSPHRASE",
+      "enabled": true
+    }
+  ]
+}
