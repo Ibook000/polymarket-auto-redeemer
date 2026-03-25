@@ -58,6 +58,57 @@
 
 ---
 
+## Linux 一行命令（下载 + 配置 + 运行）
+
+Linux 用户可直接执行下面一行命令：自动完成仓库拉取/更新、虚拟环境创建、依赖安装、`config_redeem.json` 生成、打开编辑器配置并启动程序。
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto-redeemer/main/scripts/quickstart.sh)"
+```
+
+可选环境变量（覆盖默认值）：
+
+```bash
+INSTALL_DIR=$HOME/my-redeemer PYTHON_BIN=python3.11 EDITOR=vim bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto-redeemer/main/scripts/quickstart.sh)"
+```
+
+如果你希望先本地审阅脚本再执行：
+
+```bash
+bash scripts/quickstart.sh
+```
+
+---
+
+## 一键启动 / 一键停止（小白友好）
+
+给 0 基础用户，克隆仓库后直接执行：
+
+```bash
+bash scripts/edit_config.sh
+bash scripts/one_click_start.sh
+bash scripts/one_click_stop.sh
+```
+
+建议先编辑配置（非常重要）：
+- 先执行 `bash scripts/edit_config.sh`
+
+一键启动会自动完成：
+- 不存在则创建 `.venv`
+- 安装依赖
+- 不存在则从模板生成 `config_redeem.json`
+- 后台启动程序并将 PID 写入 `.redeemer.pid`
+- 运行日志写入 `redeemer.runtime.log`
+
+常用查看命令：
+
+```bash
+tail -f redeemer.runtime.log
+cat .redeemer.pid
+```
+
+---
+
 ## 安装
 
 克隆仓库：
@@ -86,6 +137,11 @@ pip install web3 requests py-builder-relayer-client py-builder-signing-sdk
 ```text
 polymarket-auto-redeemer/
 ├── auto_redeem.py
+├── main.py
+├── redeemer.py
+├── relayer_adapter.py
+├── polymarket_client.py
+├── config.py
 ├── config_redeem.example.json
 ├── requirements.txt
 ├── .gitignore
@@ -166,6 +222,32 @@ config_redeem.json
 | `builder_secret` | string | Builder API Secret |
 | `builder_passphrase` | string | Builder API Passphrase |
 | `enabled` | bool | 是否启用该账户 |
+
+
+### 账户类型 / Signature Type 对照
+
+`funder_address` 必须和你的真实账户类型一致，否则会出现“能扫到仓位但无法领取”的问题。
+
+| signature_type | Account Type | How You Signed Up |
+|---:|---|---|
+| `1` | Poly Proxy | Email or social login (Google, etc.) |
+| `2` | Gnosis Safe | Browser wallet (MetaMask, Rainbow, Coinbase Wallet, etc.) |
+| `0` | EOA | Direct on-chain interaction (no proxy) |
+
+在本项目中的映射建议：
+
+- `private_key`：用于签名的私钥。
+- `funder_address`：真正持有可领取仓位的地址（Proxy / Safe / EOA 地址）。
+- `global.relayer_tx_type`：
+  - Safe 路径通常用 `SAFE`（对应 signature_type `2`）
+  - Proxy 路径可用 `PROXY`（需 SDK/Relayer 支持，对应 signature_type `1`）
+  - EOA（signature_type `0`）请先确认你的 relayer/sdk 是否支持再上生产。
+
+启动前快速检查：
+
+1. 配置里的 `funder_address` 与 Polymarket 页面展示地址完全一致。
+2. `private_key` 与该账户类型实际签名人一致。
+3. `relayer_tx_type` 与账户类型一致（Safe / Proxy）。
 
 ---
 
