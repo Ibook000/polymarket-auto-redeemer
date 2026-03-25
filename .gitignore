@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+redeem.log
+config_redeem.json
+.env
+venv/
+.venv/
