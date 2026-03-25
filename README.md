@@ -11,6 +11,13 @@ This project periodically scans your Polymarket positions and automatically rede
 
 ---
 
+## Language
+
+- English (this file)
+- Chinese: [`README.zh-CN.md`](./README.zh-CN.md)
+
+---
+
 ## Features
 
 - Automatic scanning of redeemable / mergeable settled positions
@@ -219,9 +226,68 @@ Example:
 
 ## Multi-Account Support
 
-This project supports multiple accounts in a single config file.
+This project supports multiple accounts in one `config_redeem.json` file.
 
-Add multiple account objects under the `accounts` array, and the script will initialize one redeemer thread for each enabled account.
+Each enabled account gets its own background redeemer thread. This is useful when you manage multiple Safes/proxy wallets.
+
+### Pattern A: One process, many accounts (recommended)
+
+Use one config file and put all accounts into `accounts`:
+
+```json
+{
+  "global": {
+    "enabled": true,
+    "scan_interval": 15,
+    "retry_interval": 120,
+    "max_per_scan": 10,
+    "pending_log_interval": 10,
+    "relayer_url": "https://relayer-v2.polymarket.com",
+    "relayer_tx_type": "SAFE"
+  },
+  "accounts": [
+    {
+      "name": "main-safe",
+      "private_key": "0x...",
+      "funder_address": "0x...",
+      "builder_api_key": "...",
+      "builder_secret": "...",
+      "builder_passphrase": "...",
+      "enabled": true
+    },
+    {
+      "name": "sub-safe-1",
+      "private_key": "0x...",
+      "funder_address": "0x...",
+      "builder_api_key": "...",
+      "builder_secret": "...",
+      "builder_passphrase": "...",
+      "enabled": true
+    }
+  ]
+}
+```
+
+Run normally:
+
+```bash
+python auto_redeem.py
+```
+
+### Pattern B: Temporarily disable specific accounts
+
+Set `enabled: false` on any account to skip it without removing credentials from the file.
+
+### Pattern C: Separate environments (dev/staging/prod)
+
+Maintain multiple config files outside Git (for example: `config_redeem.dev.json`, `config_redeem.prod.json`) and copy the one you need to `config_redeem.json` before startup.
+
+### Operational tips for multi-account setups
+
+- Use unique `name` values so logs are easy to trace.
+- Start with smaller `max_per_scan` and gradually increase.
+- Use separate API credentials per account when possible.
+- Keep one dedicated automation wallet per strategy/risk bucket.
 
 ---
 
