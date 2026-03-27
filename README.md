@@ -123,6 +123,8 @@ polymarket-redeemer start
 polymarket-redeemer stop
 ```
 
+`one_click_start.sh` also attempts to install/update this global command automatically.
+
 If needed, install/update it manually:
 
 ```bash

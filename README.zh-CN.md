@@ -116,6 +116,8 @@ polymarket-redeemer start
 polymarket-redeemer stop
 ```
 
+`one_click_start.sh` 也会自动尝试安装/更新这个全局命令。
+
 如果需要手动安装/更新全局命令：
 
 ```bash

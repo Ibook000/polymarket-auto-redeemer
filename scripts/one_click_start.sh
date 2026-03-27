@@ -13,6 +13,11 @@ EDIT_CMD_FALLBACK="bash \"$ROOT_DIR/scripts/edit_config.sh\""
 
 cd "$ROOT_DIR"
 
+if ! CMD_NAME="$GLOBAL_CMD" bash "$ROOT_DIR/scripts/install_global_cmd.sh" >/dev/null 2>&1; then
+  echo "[WARN] Failed to install global command '$GLOBAL_CMD'."
+  echo "[WARN] You can still use fallback commands below."
+fi
+
 if [ -f "$PID_FILE" ]; then
   OLD_PID="$(cat "$PID_FILE" || true)"
   if [ -n "$OLD_PID" ] && kill -0 "$OLD_PID" >/dev/null 2>&1; then

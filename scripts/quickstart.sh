@@ -30,7 +30,7 @@ fi
 
 cd "$INSTALL_DIR"
 
-if ! bash scripts/install_global_cmd.sh >/dev/null 2>&1; then
+if ! CMD_NAME="$GLOBAL_CMD" bash scripts/install_global_cmd.sh >/dev/null 2>&1; then
   echo "[WARN] Failed to install global command '$GLOBAL_CMD'."
   echo "[WARN] You can still use: $STOP_CMD_FALLBACK"
 fi
