@@ -26,6 +26,25 @@ fi
 cd "$INSTALL_DIR"
 
 if [ ! -d ".venv" ]; then
+  if ! "$PYTHON_BIN" -c "import venv" >/dev/null 2>&1; then
+    echo "[ERROR] Python module 'venv' is missing for interpreter: $PYTHON_BIN"
+    echo "[ERROR] This is a missing system dependency, not a runtime error in this repository."
+    if [ -r /etc/os-release ]; then
+      # shellcheck disable=SC1091
+      . /etc/os-release
+      if [ "${ID:-}" = "debian" ] || [ "${ID:-}" = "ubuntu" ] || [[ "${ID_LIKE:-}" == *"debian"* ]]; then
+        echo "[HINT] Debian/Ubuntu install command:"
+        echo "       sudo apt update && sudo apt install -y python3-venv"
+        python_version="$("$PYTHON_BIN" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")' 2>/dev/null || true)"
+        if [[ "$python_version" =~ ^[0-9]+\.[0-9]+$ ]]; then
+          echo "[HINT] Version-specific option for this interpreter:"
+          echo "       sudo apt update && sudo apt install -y python${python_version}-venv"
+        fi
+      fi
+    fi
+    exit 1
+  fi
+
   echo "[INFO] Creating virtual environment"
   "$PYTHON_BIN" -m venv .venv
 fi
