@@ -8,6 +8,9 @@ Automated redemption bot for settled Polymarket positions.
 This project periodically scans your Polymarket positions and automatically redeems rewards for settled conditions through the Polymarket relayer workflow. It supports multiple accounts, batched redemption, retry control, proxy configuration, and log persistence.
 
 > Designed for users who want a lightweight, configurable, multi-account auto-redeem workflow for Polymarket.
+>
+> 🚀 **Key advantage: one-line install + one-click start.**  
+> On Linux, a single command can clone/update the repo, create a virtual environment, install dependencies, generate config, and start the bot—great for fast onboarding.
 
 ---
 
@@ -72,6 +75,15 @@ Use this command on Linux to clone/update the repo, create a virtual environment
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto-redeemer/main/scripts/quickstart.sh)"
 ```
+
+Why this boosts adoption:
+
+- **Lower barrier:** start first, customize later
+- **Fewer steps:** from zero setup to running bot in one command
+- **Less troubleshooting:** built-in `venv` checks with clear install hints
+- **Easy sharing:** simple command to share with friends and communities
+
+If this project saves you time, please consider leaving a ⭐ Star to help more people discover it.
 
 Optional environment overrides:
 
