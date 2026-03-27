@@ -6,6 +6,9 @@ INSTALL_DIR="${INSTALL_DIR:-$HOME/polymarket-auto-redeemer}"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 PID_FILE="$INSTALL_DIR/.redeemer.pid"
 LOG_FILE="$INSTALL_DIR/redeemer.runtime.log"
+GLOBAL_CMD="${GLOBAL_CMD:-polymarket-redeemer}"
+STOP_CMD="$GLOBAL_CMD stop"
+STOP_CMD_FALLBACK="bash \"$INSTALL_DIR/scripts/one_click_stop.sh\""
 
 if ! command -v git >/dev/null 2>&1; then
   echo "[ERROR] git is required."
@@ -26,6 +29,11 @@ else
 fi
 
 cd "$INSTALL_DIR"
+
+if ! bash scripts/install_global_cmd.sh >/dev/null 2>&1; then
+  echo "[WARN] Failed to install global command '$GLOBAL_CMD'."
+  echo "[WARN] You can still use: $STOP_CMD_FALLBACK"
+fi
 
 if [ ! -d ".venv" ]; then
   if ! "$PYTHON_BIN" -c "import venv" >/dev/null 2>&1; then
@@ -75,7 +83,8 @@ if [ -f "$PID_FILE" ]; then
   OLD_PID="$(cat "$PID_FILE" || true)"
   if [ -n "$OLD_PID" ] && kill -0 "$OLD_PID" >/dev/null 2>&1; then
     echo "[INFO] Auto redeemer is already running (PID: $OLD_PID)."
-    echo "[INFO] Stop it first: bash scripts/one_click_stop.sh"
+    echo "[INFO] Stop it first: $STOP_CMD"
+    echo "[INFO] Fallback: $STOP_CMD_FALLBACK"
     exit 0
   fi
   rm -f "$PID_FILE"
@@ -87,4 +96,5 @@ echo "$NEW_PID" > "$PID_FILE"
 
 echo "[INFO] auto_redeem.py started with PID: $NEW_PID"
 echo "[INFO] Logs: $LOG_FILE"
-echo "[INFO] Stop command: bash scripts/one_click_stop.sh"
+echo "[INFO] Stop command: $STOP_CMD"
+echo "[INFO] Fallback: $STOP_CMD_FALLBACK"

@@ -5,6 +5,11 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PID_FILE="$ROOT_DIR/.redeemer.pid"
 LOG_FILE="$ROOT_DIR/redeemer.runtime.log"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
+GLOBAL_CMD="${GLOBAL_CMD:-polymarket-redeemer}"
+STOP_CMD="$GLOBAL_CMD stop"
+EDIT_CMD="$GLOBAL_CMD edit-config"
+STOP_CMD_FALLBACK="bash \"$ROOT_DIR/scripts/one_click_stop.sh\""
+EDIT_CMD_FALLBACK="bash \"$ROOT_DIR/scripts/edit_config.sh\""
 
 cd "$ROOT_DIR"
 
@@ -12,7 +17,8 @@ if [ -f "$PID_FILE" ]; then
   OLD_PID="$(cat "$PID_FILE" || true)"
   if [ -n "$OLD_PID" ] && kill -0 "$OLD_PID" >/dev/null 2>&1; then
     echo "[INFO] Auto redeemer is already running (PID: $OLD_PID)."
-    echo "[INFO] Stop it first: bash scripts/one_click_stop.sh"
+    echo "[INFO] Stop it first: $STOP_CMD"
+    echo "[INFO] Fallback: $STOP_CMD_FALLBACK"
     exit 0
   fi
   rm -f "$PID_FILE"
@@ -57,11 +63,12 @@ if [ ! -f "config_redeem.json" ]; then
   cp config_redeem.example.json config_redeem.json
   echo "[WARN] config_redeem.json was missing, created from template."
   echo "[WARN] Please edit config_redeem.json with your keys before production use."
-  echo "[INFO] Run: bash scripts/edit_config.sh"
+  echo "[INFO] Run: $EDIT_CMD"
+  echo "[INFO] Fallback: $EDIT_CMD_FALLBACK"
   exit 1
 fi
 
-python - <<'PYCONF'
+python - <<PYCONF
 import json
 import sys
 from pathlib import Path
@@ -84,7 +91,8 @@ for i, acc in enumerate(data.get("accounts", []), start=1):
         print(f"[ERROR] account #{i} has placeholder funder_address.")
         bad = True
 if bad:
-    print("[INFO] Run: bash scripts/edit_config.sh")
+    print('[INFO] Run: ${GLOBAL_CMD} edit-config')
+    print('[INFO] Fallback: bash ${ROOT_DIR}/scripts/edit_config.sh')
     sys.exit(1)
 PYCONF
 
@@ -95,4 +103,5 @@ echo "$NEW_PID" > "$PID_FILE"
 echo "[OK] Auto redeemer started in background."
 echo "[OK] PID: $NEW_PID"
 echo "[OK] Runtime log: $LOG_FILE"
-echo "[OK] Stop command: bash scripts/one_click_stop.sh"
+echo "[OK] Stop command: $STOP_CMD"
+echo "[OK] Fallback: $STOP_CMD_FALLBACK"
