@@ -3,9 +3,14 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PID_FILE="$ROOT_DIR/.redeemer.pid"
+GLOBAL_CMD="${GLOBAL_CMD:-polymarket-redeemer}"
+START_CMD="$GLOBAL_CMD start"
+START_CMD_FALLBACK="bash \"$ROOT_DIR/scripts/one_click_start.sh\""
 
 if [ ! -f "$PID_FILE" ]; then
   echo "[INFO] No PID file found. Bot may already be stopped."
+  echo "[INFO] Start command: $START_CMD"
+  echo "[INFO] Fallback: $START_CMD_FALLBACK"
   exit 0
 fi
 
@@ -32,8 +37,12 @@ if kill -0 "$PID" >/dev/null 2>&1; then
   fi
 
   echo "[OK] Auto redeemer stopped (PID: $PID)."
+  echo "[INFO] Start command: $START_CMD"
+  echo "[INFO] Fallback: $START_CMD_FALLBACK"
 else
   echo "[INFO] Process $PID is not running."
+  echo "[INFO] Start command: $START_CMD"
+  echo "[INFO] Fallback: $START_CMD_FALLBACK"
 fi
 
 rm -f "$PID_FILE"

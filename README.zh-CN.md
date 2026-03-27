@@ -72,6 +72,13 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto
 INSTALL_DIR=$HOME/my-redeemer PYTHON_BIN=python3.11 EDITOR=vim bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto-redeemer/main/scripts/quickstart.sh)"
 ```
 
+如果系统 Python 缺少 `venv` 模块，quickstart 会提前退出并明确提示这是系统依赖问题；在 Debian/Ubuntu 上还会给出安装命令，例如：
+
+```bash
+sudo apt update && sudo apt install -y python3-venv
+sudo apt update && sudo apt install -y python3.12-venv
+```
+
 如果你希望先本地审阅脚本再执行：
 
 ```bash
@@ -93,11 +100,36 @@ bash scripts/one_click_start.sh
 bash scripts/one_click_stop.sh
 ```
 
+如果你不在仓库目录下，也可以使用“全局/绝对路径命令”：
+
+```bash
+bash "$HOME/polymarket-auto-redeemer/scripts/edit_config.sh"
+bash "$HOME/polymarket-auto-redeemer/scripts/one_click_start.sh"
+bash "$HOME/polymarket-auto-redeemer/scripts/one_click_stop.sh"
+```
+
+推荐使用“全局命令”方式。quickstart 会自动安装 `~/.local/bin/polymarket-redeemer`：
+
+```bash
+polymarket-redeemer edit-config
+polymarket-redeemer start
+polymarket-redeemer stop
+```
+
+`one_click_start.sh` 也会自动尝试安装/更新这个全局命令。
+
+如果需要手动安装/更新全局命令：
+
+```bash
+bash scripts/install_global_cmd.sh
+```
+
 建议先编辑配置（非常重要）：
 - 先执行 `bash scripts/edit_config.sh`
 
 一键启动会自动完成：
 - 不存在则创建 `.venv`
+- 创建前先检查 `venv` 系统依赖，缺失时给出安装提示
 - 安装依赖
 - 不存在则从模板生成 `config_redeem.json`
 - 后台启动程序并将 PID 写入 `.redeemer.pid`

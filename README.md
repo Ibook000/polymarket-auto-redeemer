@@ -79,6 +79,13 @@ Optional environment overrides:
 INSTALL_DIR=$HOME/my-redeemer PYTHON_BIN=python3.11 EDITOR=vim bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ibook000/polymarket-auto-redeemer/main/scripts/quickstart.sh)"
 ```
 
+If your system Python is missing `venv`, quickstart now exits early with a clear system-dependency error and (on Debian/Ubuntu) prints install hints such as:
+
+```bash
+sudo apt update && sudo apt install -y python3-venv
+sudo apt update && sudo apt install -y python3.12-venv
+```
+
 For audited/local usage, you can also run:
 
 ```bash
@@ -100,11 +107,36 @@ bash scripts/one_click_start.sh
 bash scripts/one_click_stop.sh
 ```
 
+Global (absolute-path) command style, so you can run from any working directory:
+
+```bash
+bash "$HOME/polymarket-auto-redeemer/scripts/edit_config.sh"
+bash "$HOME/polymarket-auto-redeemer/scripts/one_click_start.sh"
+bash "$HOME/polymarket-auto-redeemer/scripts/one_click_stop.sh"
+```
+
+Global command style (recommended). Quickstart auto-installs this command to `~/.local/bin/polymarket-redeemer`:
+
+```bash
+polymarket-redeemer edit-config
+polymarket-redeemer start
+polymarket-redeemer stop
+```
+
+`one_click_start.sh` also attempts to install/update this global command automatically.
+
+If needed, install/update it manually:
+
+```bash
+bash scripts/install_global_cmd.sh
+```
+
 Edit config first (important):
 - run `bash scripts/edit_config.sh`
 
 What start does automatically:
 - creates `.venv` if missing
+- checks `python -m venv` dependency before creating `.venv` and prints install hints when missing
 - installs dependencies
 - auto-creates `config_redeem.json` from template if missing
 - runs the bot in background and writes PID to `.redeemer.pid`
