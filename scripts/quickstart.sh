@@ -4,6 +4,8 @@ set -euo pipefail
 REPO_URL="${REPO_URL:-https://github.com/Ibook000/polymarket-auto-redeemer.git}"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/polymarket-auto-redeemer}"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
+PID_FILE="$INSTALL_DIR/.redeemer.pid"
+LOG_FILE="$INSTALL_DIR/redeemer.runtime.log"
 
 if ! command -v git >/dev/null 2>&1; then
   echo "[ERROR] git is required."
@@ -68,5 +70,21 @@ else
   echo "[WARN] Editor '$EDITOR_BIN' not found. Please edit: $INSTALL_DIR/config_redeem.json"
 fi
 
-echo "[INFO] Starting auto redeemer..."
-python auto_redeem.py
+echo "[INFO] Starting auto redeemer in background (nohup)..."
+if [ -f "$PID_FILE" ]; then
+  OLD_PID="$(cat "$PID_FILE" || true)"
+  if [ -n "$OLD_PID" ] && kill -0 "$OLD_PID" >/dev/null 2>&1; then
+    echo "[INFO] Auto redeemer is already running (PID: $OLD_PID)."
+    echo "[INFO] Stop it first: bash scripts/one_click_stop.sh"
+    exit 0
+  fi
+  rm -f "$PID_FILE"
+fi
+
+nohup python auto_redeem.py >> "$LOG_FILE" 2>&1 &
+NEW_PID=$!
+echo "$NEW_PID" > "$PID_FILE"
+
+echo "[INFO] auto_redeem.py started with PID: $NEW_PID"
+echo "[INFO] Logs: $LOG_FILE"
+echo "[INFO] Stop command: bash scripts/one_click_stop.sh"
